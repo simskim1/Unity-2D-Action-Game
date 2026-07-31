@@ -1013,7 +1013,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
   mapPrefabs:
-  - {fileID: 1767693980068218824, guid: dd6df03c08e815b41b0874891744dbf8, type: 3}
+  - {fileID: 6490998841171235012, guid: 6ac18bd04bd94814f8e163f9b7758b74, type: 3}
   player: {fileID: 920135500}
   levelBlueprint: 00000000000000000000000001000000000000000000000002000000
   currentStageIndex: 0
@@ -1171,63 +1171,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1931645470}
   m_CullTransparentMesh: 1
---- !u!1001 &3614249712054231414
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1706437490296405769, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5766218584163396659, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
-      propertyPath: m_Name
-      value: Stage1-3
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 1edd4e427a428d641bcb29e30eb01b93, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1238,4 +1181,3 @@ SceneRoots:
   - {fileID: 920135500}
   - {fileID: 1248707404}
   - {fileID: 1655943270}
-  - {fileID: 3614249712054231414}
