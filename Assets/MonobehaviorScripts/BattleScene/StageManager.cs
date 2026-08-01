@@ -1,4 +1,5 @@
 using UnityEngine;
+using Unity.Cinemachine;
 
 // 1. 스테이지의 종류를 정의하는 열거형 (가독성을 엄청 높여줘!)
 public enum StageType
@@ -34,6 +35,7 @@ public class StageManager : MonoBehaviour
     // 현재 진행 중인 스테이지 번호 (0부터 시작하므로 0 = 1스테이지)
     public int currentStageIndex = 0;
 
+    public CinemachineConfiner2D cameraConfiner;
     void Start()
     {
         // 게임 시작 시 첫 스테이지 로드
@@ -65,6 +67,7 @@ public class StageManager : MonoBehaviour
             Destroy(currentMap);
         }
 
+
         // 2. 새로운 맵 프리팹을 화면에 생성 (Instantiate)
         currentMap = Instantiate(mapPrefabs[index], Vector3.zero, Quaternion.identity);
 
@@ -94,6 +97,16 @@ public class StageManager : MonoBehaviour
             if (activeEnemyCount == 0 && currentPortal != null)
             {
                 currentPortal.SetActive(true);
+            }
+
+            // 맵 프리팹 최상단(MapData)에 public PolygonCollider2D cameraBounds; 를 추가해두고,
+            // 새 맵이 생성될 때 카메라의 울타리(Bounding Shape)를 새 맵의 울타리로 교체해줌!
+            if (cameraConfiner != null && newMapData.cameraBounds != null)
+            {
+                cameraConfiner.BoundingShape2D = newMapData.cameraBounds;
+
+                // 울타리가 바뀌었으니 카메라한테 계산 다시 하라고 알려줌 (매우 중요!)
+                cameraConfiner.InvalidateBoundingShapeCache();
             }
         }
         else

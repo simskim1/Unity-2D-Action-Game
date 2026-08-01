@@ -12,4 +12,7 @@ public class MapData : MonoBehaviour
 
     [Header("포탈 설정")]
     public GameObject exitPortal;
+
+    [Header("카메라 설정")]
+    public PolygonCollider2D cameraBounds;
 }
