@@ -2614,7 +2614,7 @@ PolygonCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -2630,9 +2630,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 2.3906174, y: 19.539478}
-      - {x: -24.555635, y: 19.64573}
-      - {x: -24.557314, y: -5.3935595}
-      - {x: 31.421986, y: -5.3702793}
-      - {x: 31.430347, y: 19.517323}
+    - - {x: 2.72785, y: 13.547892}
+      - {x: -24.892866, y: 14.5310335}
+      - {x: -24.669725, y: -5.4497643}
+      - {x: 31.871632, y: -5.3702793}
+      - {x: 31.65517, y: 14.177803}
   m_UseDelaunayMesh: 1

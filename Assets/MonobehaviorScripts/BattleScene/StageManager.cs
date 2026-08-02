@@ -11,6 +11,17 @@ public enum StageType
 
 public class StageManager : MonoBehaviour
 {
+    //게임 매니저를 만들면 옮길것!********************************************************
+    public static StageManager Instance;
+
+    public PlayerController Player;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+    //****************************************************************************************
+
     // 각 스테이지별 맵 프리팹들을 인스펙터에서 넣어줄 수 있는 배열
     public GameObject[] mapPrefabs;
 
@@ -80,6 +91,7 @@ public class StageManager : MonoBehaviour
 
             if (newMapData.exitPortal != null)
             {
+                Debug.Log("포탈 닫기!");
                 currentPortal = newMapData.exitPortal;
                 currentPortal.SetActive(false);
             }
@@ -94,7 +106,7 @@ public class StageManager : MonoBehaviour
                 activeEnemyCount++;
             }
 
-            if (activeEnemyCount == 0 && currentPortal != null)
+            if (activeEnemyCount == 0 && currentPortal != null && levelBlueprint[currentStageIndex] != StageType.Rest)
             {
                 currentPortal.SetActive(true);
             }

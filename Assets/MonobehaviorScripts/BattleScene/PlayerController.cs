@@ -79,6 +79,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         StateMachine.Initialize(IdleState);
     }
 
+    private void Start()
+    {
+        StageManager.Instance.Player = this;
+    }
+
     private void Update()
     {
         //가드브레이크 상태 테스트
