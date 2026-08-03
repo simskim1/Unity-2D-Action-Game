@@ -162,10 +162,10 @@ public class PlayerController : MonoBehaviour, IDamageable
         jumpBufferCounter = 0f;
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageInfo info)
     {
         bool isGuard = false;
-        float damageTake = damage;
+        float damageTake = info.damage;
         if (StateMachine.CurrentState == RollState || invincibilityTimer > 0f)
         {
             Debug.Log("회피 성공! 데미지 무시");
@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         if (StateMachine.CurrentState == GuardState)
         {
-            float guardStaminaCost = 1.5f * damage;
+            float guardStaminaCost = 1.5f * info.damage;
             if (Stats.CanUseStamina(guardStaminaCost))
             {
                 Debug.Log("가드 성공");
@@ -195,7 +195,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
         else if (StateMachine.CurrentState == GuardBreakState) 
         {
-            damageTake = 1.3f * damage;
+            damageTake = 1.3f * info.damage;
             Stats.Damage(damageTake);
             return;
         }
@@ -242,12 +242,17 @@ public class PlayerController : MonoBehaviour, IDamageable
             if (damageable != null)
             {
                 // 기본 공격력 * 콤보 배율
-                float finalDamage = Stats.baseAttackPower * damageMultiplier;
+                DamageInfo myAttackInfo = new DamageInfo
+                {
+                    damage = Stats.baseAttackPower * damageMultiplier,
+                    attacker = this.transform,
+                    knockbackPower = 10f // 플레이어의 공격 스킬마다 다르게 설정 가능!
+                };
 
                 // 인터페이스의 데미지 함수 호출!
-                damageable.TakeDamage(finalDamage);
+                damageable.TakeDamage(myAttackInfo);
 
-                Debug.Log($"적 타격 성공! 데미지: {finalDamage}");
+                Debug.Log($"적 타격 성공! 데미지: {myAttackInfo.damage}");
             }
         }
     }

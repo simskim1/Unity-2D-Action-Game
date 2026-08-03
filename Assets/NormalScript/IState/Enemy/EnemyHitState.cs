@@ -16,15 +16,15 @@ public class EnemyHitState : IState
     public void Enter()
     {
         Debug.Log("Hit Enter");
+        Debug.Log(enemy.Rb.linearVelocity);
+
         // 피격 애니메이션 재생
         enemy.Animator.Play("Enemy_Hit", 0, 0f);
-        enemy.Animator.Update(0f);
+        //enemy.Animator.Update(0f);
+        enemy.KnockBackSetter(true);
         currentTimer = 0f;
+        Debug.Log($"Hit Enter 속도 : {enemy.Rb.linearVelocity}");
 
-        // 피격 시 물리 제어: 
-        // 하던 행동(이동, 구르기 등)을 강제로 끊고 멈춰 세움.
-        // 만약 '넉백(Knockback)'을 주고 싶다면 0f 대신 밀려날 방향의 속도를 넣어주면 돼.
-        enemy.Rb.linearVelocity = new Vector2(0f, enemy.Rb.linearVelocity.y);
     }
 
     public void Update()
@@ -42,6 +42,6 @@ public class EnemyHitState : IState
 
     public void Exit()
     {
-
+        enemy.KnockBackSetter(false);
     }
 }

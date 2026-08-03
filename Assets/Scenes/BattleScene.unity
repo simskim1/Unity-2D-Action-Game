@@ -1161,9 +1161,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 537ce0832ffae8e4db61345db4cf8865, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StageManager
-  Player: {fileID: 0}
+  Player: {fileID: 920135495}
   mapPrefabs:
-  - {fileID: 1821873201483138784, guid: 2b03d5e0bc3b5914ab75e90cc4b58262, type: 3}
+  - {fileID: 1767693980068218824, guid: dd6df03c08e815b41b0874891744dbf8, type: 3}
   player: {fileID: 920135500}
   levelBlueprint: 00000000000000000000000001000000000000000000000002000000
   currentStageIndex: 0

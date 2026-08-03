@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour, IDamageable
 {
+    private bool isKnockback;
+
     public Animator Animator { get; private set; }
     public Rigidbody2D Rb { get; private set; }
     public StatManager Stats { get; private set; }
@@ -25,13 +27,17 @@ public class EnemyController : MonoBehaviour, IDamageable
     public Transform attackPoint;    // 방금 만든 AttackPoint 오브젝트 연결
     public float attackRange = 0.8f; // 공격을 시작하는 타격 거리
     public LayerMask playerLayer;
-    public float atttackPower;
+    public float attackPower;
 
     public float attackCooldown = 2.0f; // 2초마다 공격 가능
     public float lastAttackTime = -9999f; // 시작하자마자 때릴 수 있도록 아주 작은 값으로 초기화
 
+    [SerializeField]
+    private DamageInfo damageInfo;
+
     void Awake()
     {
+        isKnockback = false;
         StateMachine = new StateMachine();
         IdleState = new EnemyIdleState(this);
         ChaseState = new EnemyChaseState(this);
@@ -56,12 +62,29 @@ public class EnemyController : MonoBehaviour, IDamageable
     }
 
     // 인터페이스 구현부 (아까 더미에서 만들었던 그 부분!)
-    public void TakeDamage(float damage)
+    public void TakeDamage(DamageInfo info)
     {
-        Debug.Log($"적이 데미지를 입음: {damage}");
-        float damageTake = damage;
+        Debug.Log($"적이 데미지를 입음: {info.damage}");
+        Stats.Damage(info.damage);
 
-        Stats.Damage(damageTake);
+        // --- [넉백 적용] ---
+        if (Rb != null && info.attacker != null)
+        {
+            // 넉백 방향 계산 (공격자 위치 기반)
+            float dirX = (transform.position.x - info.attacker.position.x > 0) ? 1f : -1f;
+
+            Rb.linearVelocity = Vector2.zero; // 기존 속도 초기화
+
+            // info 안에 있는 knockbackPower를 사용! (강공격은 멀리, 약공격은 조금 날아감)
+            Vector2 knockbackDir = new Vector2(dirX, 0f).normalized;
+            Rb.AddForce(knockbackDir * info.knockbackPower, ForceMode2D.Impulse);
+            //테스트
+            Debug.Log("직후 : " + Rb.linearVelocity);
+            Invoke(nameof(TestVelocity), 0.1f);
+
+            
+        }
+        // -------------------
 
         // 체력이 0 이하가 되어 죽을 때
         if (Stats.currentHealth <= 0)
@@ -108,15 +131,12 @@ public class EnemyController : MonoBehaviour, IDamageable
             // 적의 종류(슬라임, 고블린, 상자)가 뭐든 상관없이 '맞을 수 있는 애'면 무조건 가져옴.
             IDamageable damageable = player.GetComponent<IDamageable>();
 
+            DamageInfo info = damageInfo;
+            info.attacker = transform;
+
             if (damageable != null)
             {
-                // 기본 공격력 * 콤보 배율
-                float finalDamage = atttackPower * damageMultiplier;
-
-                // 인터페이스의 데미지 함수 호출!
-                damageable.TakeDamage(finalDamage);
-
-                Debug.Log($"적 타격 성공! 데미지: {finalDamage}");
+                damageable.TakeDamage(info);
             }
         }
     }
@@ -130,5 +150,20 @@ public class EnemyController : MonoBehaviour, IDamageable
     {
         StateMachine.TransitionTo(IdleState);
         Debug.Log("EndAttack");
+    }
+
+    public void KnockBackSetter(bool check)
+    {
+        isKnockback = check;
+    }
+
+    public bool KnockBackGetter()
+    {
+        return isKnockback;
+    }
+
+    void TestVelocity()
+    {
+        Debug.Log(Rb.linearVelocity);
     }
 }

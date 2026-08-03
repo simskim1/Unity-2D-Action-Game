@@ -14,6 +14,7 @@ public class StateMachine
     // 상태를 다른 상태로 바꿀 때 사용
     public void TransitionTo(IState nextState, bool force = false)
     {
+        Debug.Log($"{CurrentState?.GetType().Name} -> {nextState.GetType().Name}");
         if (!force && CurrentState == nextState) return;
 
         CurrentState.Exit();       // 이전 상태 종료

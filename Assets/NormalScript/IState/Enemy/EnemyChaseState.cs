@@ -12,11 +12,13 @@ public class EnemyChaseState : IState
     public void Enter()
     {
         // 추적(이동) 애니메이션 재생
-        enemy.Animator.Play("Enemy_Run");
+        enemy.Animator.Play("Enemy_Idle");
     }
 
     public void Update()
     {
+        if (enemy.KnockBackGetter())
+            return;
         // 플레이어와의 거리 계산
         float distanceToPlayer = Vector2.Distance(enemy.transform.position, enemy.PlayerTarget.position);
 
@@ -31,7 +33,7 @@ public class EnemyChaseState : IState
         else if (hitPlayer.Length > 0)
         {
             // 멈춰서 플레이어를 째려봄 (속도를 0으로)
-            enemy.Rb.linearVelocity = new Vector2(0f, enemy.Rb.linearVelocity.y);
+            //enemy.Rb.linearVelocity = new Vector2(0f, enemy.Rb.linearVelocity.y);
 
             // (선택) 여기서 방향(Flip)만 플레이어 쪽을 보게 업데이트 해줄 수도 있어.
             return;
@@ -49,8 +51,9 @@ public class EnemyChaseState : IState
 
     public void Exit()
     {
+        
         // 추적 상태를 벗어날 때(공격하거나 포기할 때) 얼음판처럼 미끄러지지 않게 속도를 0으로 멈춤
-        enemy.Rb.linearVelocity = new Vector2(0f, enemy.Rb.linearVelocity.y);
+        //enemy.Rb.linearVelocity = new Vector2(0f, enemy.Rb.linearVelocity.y);
     }
 
     private void MoveTowardsPlayer()
