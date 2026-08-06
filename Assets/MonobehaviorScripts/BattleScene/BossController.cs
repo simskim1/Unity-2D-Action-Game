@@ -7,19 +7,44 @@ public class BossController : MonoBehaviour, IDamageable
     public bool isTransitioning = false; // 페이즈 전환 연출 중인지 체크
 
     // 보스 상태 머신 (기존에 쓰시던 구조 활용)
-    public Animator Animator { get; private set; }
+    public Animator animator { get; private set; }
+    public Rigidbody2D Rb { get; private set; }
     public StateMachine stateMachine;
     public StatManager Stats;
 
+    public Transform PlayerTarget { get; private set; }
+    public float detectRange = 4f;
+    public float moveSpeed = 2f;
+
+    public BossIdleState IdleState { get; private set; }
+    public BossChaseState ChaseState { get; private set; }
+
     // 공격 쿨타임 제어
+    [Header("Attack Settings")]
     private float attackTimer = 0f;
     public float timeBetweenAttacks = 3f;
+    public LayerMask playerLayer;
+
+    public bool isAttackFinished = false;
+
+    [Header("MeleeAttack")]
+    public Transform meleeAttackPoint;
+    public float meleeAttackRange = 0.8f;
+
+    [SerializeField]
+    private DamageInfo damageInfo;
 
     void Awake()
     {
         stateMachine = new StateMachine();
         Stats = GetComponent<StatManager>();
-        Animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
+        Rb = GetComponent<Rigidbody2D>();
+
+        IdleState = new BossIdleState(this);
+        ChaseState = new BossChaseState(this);
+
+        PlayerTarget = GameObject.FindGameObjectWithTag("Player").transform;
     }
     void Update()
     {
@@ -46,8 +71,7 @@ public class BossController : MonoBehaviour, IDamageable
         {/*******************************************************************************************
             case 1: stateMachine.TransitionTo(MeleeAttackState); break;
             case 2: stateMachine.TransitionTo(DashAttackState); break;
-            case 3: stateMachine.TransitionTo(ShootAttackState); break;
-            case 4: stateMachine.TransitionTo(SlamAttackState); break;
+            case 3: stateMachine.TransitionTo(SlamAttackState); break;
             */////////////////////////////////////////////////////////////////////////////////////////////
         }
     }
@@ -80,5 +104,43 @@ public class BossController : MonoBehaviour, IDamageable
 
         // 2페이즈 전환 상태로 넘어가서 포효하는 애니메이션 재생, 카메라 진동, 이펙트 등 처리**********************************************************************************
         //stateMachine.TransitionTo(PhaseTransitionState, true);
+    }
+
+    public void MeleeAttack()
+    {
+        Debug.Log("적 공격 실행");
+        // 1. attackPoint를 중심으로 attackRange 반경 내에 있는 'enemyLayer'를 가진 모든 콜라이더를 배열로 가져옴
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(meleeAttackPoint.position, meleeAttackRange, playerLayer);
+
+        if (hitPlayer.Length == 0)
+        {
+            Debug.Log("대상 없음");
+        }
+        // 2. 감지된 모든 적들에게 데미지 전달
+        foreach (Collider2D player in hitPlayer)
+        {
+            // 우리가 만든 IDamageable 인터페이스를 찾아냄! 
+            // 적의 종류(슬라임, 고블린, 상자)가 뭐든 상관없이 '맞을 수 있는 애'면 무조건 가져옴.
+            IDamageable damageable = player.GetComponent<IDamageable>();
+
+            DamageInfo info = damageInfo;
+            info.attacker = transform;
+
+            if (damageable != null)
+            {
+                damageable.TakeDamage(info);
+            }
+        }
+    }
+
+    public void Attacking()
+    {
+        isAttackFinished = true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, detectRange);
     }
 }
