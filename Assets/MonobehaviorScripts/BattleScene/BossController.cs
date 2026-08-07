@@ -27,9 +27,26 @@ public class BossController : MonoBehaviour, IDamageable
 
     public bool isAttackFinished = false;
 
+    [Header("Boss Patterns")]
+    public bool hasMelee = false;
+    public bool hasDash = false;
+    public bool hasSlam = false;
+
     [Header("MeleeAttack")]
     public Transform meleeAttackPoint;
     public float meleeAttackRange = 0.8f;
+
+    [Header("Dash Attack")]
+    public GameObject dashHitbox;
+
+    [Header("SlamAttack")]
+    public Transform slamAttackPoint;
+    public float slamAttackRange = 0.8f;
+
+    [Header("Ground Check Settings")]
+    [SerializeField] private Transform groundCheckPoint; // 캐릭터 발끝에 위치할 빈 게임오브젝트
+    [SerializeField] private float groundCheckRadius = 0.2f; // 감지 반경
+    [SerializeField] private LayerMask groundLayer; // 바닥으로 인식할 레이어 (Tilemap 등에 설정)
 
     [SerializeField]
     private DamageInfo damageInfo;
@@ -125,12 +142,55 @@ public class BossController : MonoBehaviour, IDamageable
 
             DamageInfo info = damageInfo;
             info.attacker = transform;
+            info.damage = Stats.baseAttackPower;
+            info.knockbackPower = 0.1f;
 
             if (damageable != null)
             {
                 damageable.TakeDamage(info);
             }
         }
+        isAttackFinished = true;
+    }
+
+    public void EnableDashHitbox()
+    {
+        dashHitbox.SetActive(true);
+    }
+
+    public void DisableDashHitbox()
+    {
+        dashHitbox.SetActive(false);
+    }
+
+    public void SlamAttack()
+    {
+        Debug.Log("적 공격 실행");
+        // 1. attackPoint를 중심으로 attackRange 반경 내에 있는 'enemyLayer'를 가진 모든 콜라이더를 배열로 가져옴
+        Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(slamAttackPoint.position, slamAttackRange, playerLayer);
+
+        if (hitPlayer.Length == 0)
+        {
+            Debug.Log("대상 없음");
+        }
+        // 2. 감지된 모든 적들에게 데미지 전달
+        foreach (Collider2D player in hitPlayer)
+        {
+            // 우리가 만든 IDamageable 인터페이스를 찾아냄! 
+            // 적의 종류(슬라임, 고블린, 상자)가 뭐든 상관없이 '맞을 수 있는 애'면 무조건 가져옴.
+            IDamageable damageable = player.GetComponent<IDamageable>();
+
+            DamageInfo info = damageInfo;
+            info.attacker = transform;
+            info.damage = Stats.baseAttackPower * 2;
+            info.knockbackPower = 0.5f;
+
+            if (damageable != null)
+            {
+                damageable.TakeDamage(info);
+            }
+        }
+        isAttackFinished = true;
     }
 
     public void Attacking()
@@ -142,5 +202,17 @@ public class BossController : MonoBehaviour, IDamageable
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, detectRange);
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(meleeAttackPoint.position, meleeAttackRange);
+
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(slamAttackPoint.position, slamAttackRange);
+    }
+
+    public bool IsGrounded()
+    {
+        // 캐릭터 발끝 위치(groundCheckPoint)에서 원(Circle)을 그려서 groundLayer와 겹치는지 확인
+        return Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
     }
 }
