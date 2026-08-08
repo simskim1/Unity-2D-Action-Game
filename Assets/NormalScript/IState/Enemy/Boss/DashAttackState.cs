@@ -17,7 +17,7 @@ public class DashAttackState : IState
     }
     public void Enter()
     {
-
+        boss.EnableDashHitbox();
         boss.animator.Play("Boss_Dash");
 
         // 돌진 방향 설정 (플레이어가 있는 쪽을 향해)
@@ -58,6 +58,6 @@ public class DashAttackState : IState
 
     public void Exit()
     {
-        
+        boss.DisableDashHitbox();
     }
 }

@@ -208,6 +208,9 @@ public class BossController : MonoBehaviour, IDamageable
 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(slamAttackPoint.position, slamAttackRange);
+
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(groundCheckPoint.position, groundCheckRadius);
     }
 
     public bool IsGrounded()
