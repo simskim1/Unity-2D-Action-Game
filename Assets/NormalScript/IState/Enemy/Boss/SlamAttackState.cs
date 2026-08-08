@@ -42,9 +42,10 @@ public class SlamAttackState : IState
         }
 
         // 착지 애니메이션까지 모두 끝났다면 복귀
-        if (isGrounded && boss.isAttackFinished)
+        if (isGrounded && boss.endAnimation)
         {
             boss.isAttackFinished = false;
+            boss.endAnimation = false;
             boss.stateMachine.TransitionTo(boss.IdleState);
         }
     }

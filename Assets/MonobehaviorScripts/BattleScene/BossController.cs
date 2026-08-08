@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BossController : MonoBehaviour, IDamageable
@@ -26,6 +27,7 @@ public class BossController : MonoBehaviour, IDamageable
     public LayerMask playerLayer;
 
     public bool isAttackFinished = false;
+    public bool endAnimation = false;
 
     [Header("Boss Patterns")]
     public bool hasMelee = false;
@@ -166,6 +168,10 @@ public class BossController : MonoBehaviour, IDamageable
     public void SlamAttack()
     {
         Debug.Log("적 공격 실행");
+        if (isAttackFinished == true)
+        {
+                return;
+        }
         // 1. attackPoint를 중심으로 attackRange 반경 내에 있는 'enemyLayer'를 가진 모든 콜라이더를 배열로 가져옴
         Collider2D[] hitPlayer = Physics2D.OverlapCircleAll(slamAttackPoint.position, slamAttackRange, playerLayer);
 
@@ -196,6 +202,11 @@ public class BossController : MonoBehaviour, IDamageable
     public void Attacking()
     {
         isAttackFinished = true;
+    }
+
+    public void EndAnimation()
+    {
+        endAnimation = true;
     }
 
     private void OnDrawGizmosSelected()

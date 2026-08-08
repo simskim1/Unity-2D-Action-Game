@@ -30,9 +30,10 @@ public class MeleeAttackState : IState // 기존 상태 기본 클래스 상속
         // 주의: 액션 게임에서는 애니메이션이 끝나는 시점을 보통 
         // 'Animation Event'를 통해 체크하여 상태를 전환합니다.
         // 여기서는 예시로 임의의 조건(isAttackFinished)을 넣었습니다.
-        if (boss.isAttackFinished)
+        if (boss.endAnimation)
         {
             boss.isAttackFinished = false;
+            boss.endAnimation = false;
             boss.stateMachine.TransitionTo(boss.IdleState); // 공격이 끝나면 대기 상태로 복귀
         }
     }
